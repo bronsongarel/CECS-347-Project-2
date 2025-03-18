@@ -1,8 +1,7 @@
 // FollowingRobot.c
 // Runs TM4C123
 // Starter program CECS 347 project 2 - A Follwoing Robot
-// by Jose Ambriz, Bronson Garel, Jonathan Kim, Kyle Wyckoff
-// 03/17/2025
+// by Min He, 03/17/2024
 
 #include "tm4c123gh6pm.h"
 #include <stdint.h>
@@ -31,14 +30,15 @@ void wall_follower(void);
 void stop_the_car(void);    // (ADDED)
 void move_backward(void);   // (ADDED)
 void move_forward(void);    // (ADDED)
-void turn_right(void);
-void turn_left(void);
-void backup_left(void);
-void backup_right(void);
-void pivot_left(void);
-void pivot_right(void);
-void uturn_left(void);
-void uturn_right(void);
+void turn_right(void);			// (ADDED)
+void turn_left(void);       // (ADDED)
+void backup_left(void);     // (ADDED)
+void backup_right(void);		// (ADDED)
+void pivot_left(void);      // (ADDED)
+void pivot_right(void);     // (ADDED)
+void uturn_left(void);			// (ADDED)
+void uturn_right(void);     // (ADDED)
+
 uint8_t check_closest(unsigned long l, unsigned long forward, unsigned long right); // (ADDED)
 
 enum robot_modes mode= OBJECT_FOLLOWER;
@@ -281,6 +281,9 @@ void backup_right(void)
 	PWM0B_Duty(SPEED_60); //speed can be 100
 }
 
+
+
+
 void pivot_left(void){
     PWM0A_Duty(STOP);
     PWM0B_Duty(STOP);
@@ -366,6 +369,7 @@ void GPIOPortF_Handler(void){ // called on press of either SW1 or SW2
 		else
 		{
 			curr = INACTIVE;
+			LED = RED;
 		}
 		GPIO_PORTF_ICR_R = 0x10;  // acknowledge flag4
   }
@@ -375,6 +379,7 @@ void GPIOPortF_Handler(void){ // called on press of either SW1 or SW2
 		if (mode == OBJECT_FOLLOWER)
 		{
 			mode = WALL_FOLLOWER;
+			LED = GREEN;
 			for (i=0;i<10;i++) {
 				ReadADCMedianFilter(&frwdleft, &ahead, &frwdright);
 			}
@@ -388,6 +393,7 @@ void GPIOPortF_Handler(void){ // called on press of either SW1 or SW2
 		else
 		{
 			mode = OBJECT_FOLLOWER;
+			LED = BLUE;
 		}
 		GPIO_PORTF_ICR_R = 0x01;  // acknowledge flag4
 	}
